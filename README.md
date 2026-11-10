@@ -1,0 +1,1 @@
+# suekadoyudai.github.io
