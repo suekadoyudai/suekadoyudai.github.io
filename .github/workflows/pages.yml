@@ -26,6 +26,11 @@ jobs:
         run: |
           mkdir _site
           unzip -q site.zip -d _site
+          for z in $(ls arcade-*.zip 2>/dev/null | sort); do
+            if unzip -Z1 "$z" | grep -v -E '^arcade/' | grep -q .; then echo "::error::$z has paths outside arcade/"; exit 1; fi
+            if unzip -Z1 "$z" | grep -q -E '(^/|\.\./)'; then echo "::error::$z has unsafe paths"; exit 1; fi
+            unzip -q -o "$z" -d _site
+          done
           ls -la _site _site/.well-known
       - uses: actions/configure-pages@v5
       - uses: actions/upload-pages-artifact@v3
